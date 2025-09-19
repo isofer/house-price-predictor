@@ -50,6 +50,7 @@ jobs:
         if: always()
         run: |
           docker compose -f deployment/mlflow/docker-compose.yaml down -v
+          docker rmi ghcr.io/mlflow/mlflow:latest || true
           
       # - name: Build and push container image
       #   run: |
