@@ -34,7 +34,7 @@ jobs:
           --output data/processed/featured_house_data.csv \
           --preprocessor models/trained/preprocessor.pkl
 
-      - name: Start MLflow    
+      - name: Start MLflow containers  
         run: |
           docker compose -f deployment/mlflow/docker-compose.yaml up -d
           
@@ -45,6 +45,11 @@ jobs:
           --data data/processed/featured_house_data.csv \
           --models-dir models \
           --mlflow-tracking-uri http://localhost:5555
+          
+      - name: Stop and remove MLflow containers
+        if: always()
+        run: |
+          docker compose -f deployment/mlflow/docker-compose.yaml down -v
           
       # - name: Build and push container image
       #   run: |
