@@ -1,15 +1,16 @@
 services:
   fastapi:
-    image: fastapi:latest
+    image: isofer/fastapi:latest
     build:
       context: .
+      dockerfile: Dockerfile
     ports:
       - 55000:8000
   streamlit:
-    image: streamlit:v1
+    image: isofer/streamlit:latest
     build:
       context: ./streamlit_app
-
+      dockerfile: Dockerfile
     ports:
       - 8501:8501
     environment:

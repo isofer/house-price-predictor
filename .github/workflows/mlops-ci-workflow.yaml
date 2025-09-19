@@ -45,12 +45,21 @@ jobs:
           --data data/processed/featured_house_data.csv \
           --models-dir models \
           --mlflow-tracking-uri http://localhost:5555
-          
-      - name: Stop and remove MLflow containers
+
+      - name: Build and push container image
+        run: |
+          docker compose build
+          docker push isofer/fastapi:latest
+          docker push isofer/streamlit:latest
+
+      - name: Stop and remove containers
         if: always()
         run: |
           docker compose -f deployment/mlflow/docker-compose.yaml down -v
+          docker rmi isofer/fastapi:latest || true
+          docker rmi isofer/streamlit:latest || true
           docker rmi ghcr.io/mlflow/mlflow:latest || true
+
           
       # - name: Build and push container image
       #   run: |
