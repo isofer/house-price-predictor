@@ -28,4 +28,17 @@ jobs:
       - name: Feature engineering
         run: |
           python src/features/engineer.py --input data/processed/cleaned_house_data.csv --output data/processed/featured_house_data.csv --preprocessor models/trained/preprocessor.pkl
+
+      - name: Start MLflow    
+        run: |
+          docker compose -f deployment/mlflow/docker-compose.yml up -d
           
+      - name: Model training
+        run: |
+          python src/models/train_model.py --config configs/model_config.yaml --data data/processed/featured_house_data.csv --models-dir models --mlflow-tracking-uri http://localhost:5555
+          
+      # - name: Build and push container image
+      #   run: |
+      #     docker build -t house-price-predictor .
+      #     docker tag house-price-predictor ghcr.io/yourusername/house-price-predictor:latest
+      #     docker push ghcr.io/yourusername/house-price-predictor:latest
